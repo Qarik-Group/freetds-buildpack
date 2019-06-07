@@ -18,8 +18,8 @@
   version = "v3.6.1"
 
 [[projects]]
-  branch = "master"
-  digest = "1:53006592f6afecf6b169405659460ccdef6c2db0f50498857e9d01b3dd233dd9"
+  branch = "cutlass-skip-tls-verify"
+  digest = "1:26eeb58286cf132a27186fed08704971c9432b592b39374c2981eb399538a880"
   name = "github.com/cloudfoundry/libbuildpack"
   packages = [
     ".",
@@ -27,7 +27,8 @@
     "packager",
   ]
   pruneopts = ""
-  revision = "8119571fa48b4b43cbae95d7c9613bcad4a23be6"
+  revision = "7960f8cf829c92e2220764efe2f615fdd9250b79"
+  source = "github.com/drnic/libbuildpack"
 
 [[projects]]
   digest = "1:7ce300e943482aff885b3318c1c6a609827f43e3ba26a073380d5ba6143a0c48"
