@@ -1,0 +1,9 @@
+applications:
+- name: tiny-tds-app
+  instances: 1
+  memory: 256M
+  disk_quota: 512M
+  stack: cflinuxfs3
+  buildpacks:
+  - freetds_buildpack
+  - ruby_buildpack
