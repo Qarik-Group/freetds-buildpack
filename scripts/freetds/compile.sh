@@ -3,7 +3,15 @@
 set -e
 
 # either set $VERSION, or pass in from ${VERSION_FROM} file (e.g. concourse resource)
+VERSION=${VERSION:-}
+if [[ ${VERSION_REGEX:-X} != "X" ]]; then
+  pushd $LIBRARY
+  f=$(ls $LIBRARY*)
+  [[ $f =~ $VERSION_REGEX ]] && { VERSION="${BASH_REMATCH[1]}"; }
+  popd
+fi
 VERSION=${VERSION:-$(cat ${VERSION_FROM})}
+echo "VERSION: $VERSION"
 S3_BUCKET=${S3_BUCKET:-freetds-buildpack}
 S3_REGION=${S3_REGION:-us-east-2}
 
@@ -12,7 +20,7 @@ S3_REGION=${S3_REGION:-us-east-2}
 TMP_SRC_DIR=${TMP_DIR:-tmp/src}
 TMP_BUILD_DIR=${TMP_DIR:-tmp/build}
 
-SRC_ZIP=$PWD/$(ls $SRC_DIR/*.tar.gz)
+SRC_ARCHIVE=$PWD/$(ls $SRC_DIR/$LIBRARY*)
 
 SRC_DIR=$PWD/${SRC_DIR}
 OUTPUT_DIR=$PWD/${OUTPUT_DIR}
@@ -23,7 +31,7 @@ mkdir -p $TMP_SRC_DIR
 cd $TMP_SRC_DIR
 rm -rf freetds-*/
 
-tar xfz $SRC_ZIP
+tar xfz $SRC_ARCHIVE
 cd *freetds*/
 ./configure --prefix=${TMP_BUILD_DIR}
 make

@@ -68,6 +68,29 @@ jobs:
     - get: git
     - get: freetds
       trigger: true
+  - task: build
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: (( grab meta.image.name ))
+          tag:        (( grab meta.image.tag ))
+      inputs:
+      - name: git
+      - name: freetds
+      outputs:
+      - name: output
+      run:
+        path: (( concat "./git/scripts/" meta.name "/compile.sh" ))
+      params:
+        LIBRARY: freetds
+        # VERSION_FROM: freetds/version
+        VERSION_REGEX: freetds-(.*).tar.gz
+        SRC_DIR: freetds
+        OUTPUT_DIR: output
+        S3_BUCKET: (( grab meta.aws.bucket ))
+        S3_REGION: (( grab meta.aws.region_name ))
 
 resource_types:
   - name: ftp
@@ -89,4 +112,3 @@ resources:
       uri: ftp://ftp.freetds.org/pub/freetds/stable/
       # regex: (?P<file>freetds-(?P<version>[0-9]+\.[0-9]+\.[0-9]+).*.tar.gz)
       regex: (?P<file>freetds-(?P<version>[1-9][0-9]*\.[1-9][0-9]*\.[0-9]+).*.tar.gz)
-
