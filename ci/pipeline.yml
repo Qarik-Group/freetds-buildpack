@@ -66,7 +66,7 @@ jobs:
   plan:
   - aggregate:
     - get: git
-    - get: freetsd
+    - get: freetds
 
 resource_types:
   - name: ftp
@@ -82,8 +82,10 @@ resources:
       branch:      (( grab meta.github.branch ))
       private_key: (( grab meta.github.private_key ))
 
-  - name: freetsd
+  - name: freetds
     type: ftp
     source:
       uri: ftp://ftp.freetds.org/pub/freetds/stable/
-      regex: (?P<file>freetds-(?P<version>.*).tar.gz)
+      # regex: (?P<file>freetds-(?P<version>[0-9]+\.[0-9]+\.[0-9]+).*.tar.gz)
+      regex: (?P<file>freetds-(?P<version>[1-9][0-9]*\.[1-9][0-9]*\.[0-9]+).*.tar.gz)
+
