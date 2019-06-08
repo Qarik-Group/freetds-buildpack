@@ -67,6 +67,7 @@ jobs:
   - aggregate:
     - get: git
     - get: freetds
+      trigger: true
 
 resource_types:
   - name: ftp
