@@ -4,6 +4,8 @@
 
 This Cloud Foundry supply buildpack can be used in conjunction with your normal application buildpack (`ruby_buildpack` for example), to allow dependencies to be installed that require TinyTDS (the Ruby `tiny_tds` rubygem for example).
 
+The FreeTDS library and binaries are already precompiled, so this buildpack is very fast to use from your first deployment.
+
 Without this buildpack, your application deployment to Cloud Foundry might fail with an error like:
 
 ```plain
