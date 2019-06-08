@@ -21,9 +21,13 @@ meta:
     email:  (( param "Please provide the git email for automated commits" ))
     name:   (( param "Please provide the git name for automated commits" ))
 
-  image:
-    name: starkandwayne/concourse-go
-    tag: 1.12
+  images:
+    go:
+      name: starkandwayne/concourse-go
+      tag: 1.12
+    cflinux:
+      name: cloudfoundry/cflinuxfs3
+      tag: latest
 
   cf:
     api_url:         (( param "Please provide api_url" ))
@@ -74,8 +78,8 @@ jobs:
       image_resource:
         type: docker-image
         source:
-          repository: (( grab meta.image.name ))
-          tag:        (( grab meta.image.tag ))
+          repository: (( grab meta.images.cflinux.name ))
+          tag:        (( grab meta.images.cflinux.tag ))
       inputs:
       - name: git
       - name: freetds
