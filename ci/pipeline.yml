@@ -1,0 +1,89 @@
+---
+#
+# ci/pipeline.yml
+#
+# Pipeline structure file for a Cloud Foundry Buildpack
+#
+# DO NOT MAKE CHANGES TO THIS FILE.  Instead, modify
+# ci/settings.yml and override what needs overridden.
+# This uses spruce, so you have some options there.
+#
+# author:  Dr Nic Williams <drnicwilliams@gmail.com>
+# created: 2017-10-24
+
+meta:
+  name:     (( param "Please name your pipeline" ))
+  pipeline: (( concat meta.name "-buildpack" ))
+  target:   (( param "Please identify the name of the target Concourse CI" ))
+  url:      (( param "Please specify the full url of the target Concourse CI" ))
+
+  git:
+    email:  (( param "Please provide the git email for automated commits" ))
+    name:   (( param "Please provide the git name for automated commits" ))
+
+  image:
+    name: starkandwayne/concourse-go
+    tag: 1.12
+
+  cf:
+    api_url:         (( param "Please provide api_url" ))
+    admin_username:  (( param "Please provide admin_username" ))
+    admin_password:  (( param "Please provide admin_password" ))
+    organization:    (( param "Please provide organization" ))
+    space:           (( param "Please provide space" ))
+
+  aws:
+    bucket:     (( grab meta.pipeline ))
+    region_name: us-east-1
+    access_key: (( param "Please set your AWS Access Key ID for your pipeline S3 Bucket" ))
+    secret_key: (( param "Please set your AWS Secret Key ID for your pipeline S3 Bucket" ))
+
+  github:
+    uri:          (( concat "git@github.com:" meta.github.owner "/" meta.github.repo ))
+    owner:        (( param "Please specify the name of the user / organization that owns the Github repository" ))
+    repo:         (( grab meta.pipeline ))
+    branch:       master
+    private_key:  (( param "Please generate an SSH Deployment Key for this repo and specify it here" ))
+    access_token: (( param "Please generate a Personal Access Token to be used for creating github releases (do you have a ci-bot?)" ))
+
+  slack:
+    webhook:       (( param "Please specify your Slack Incoming Webhook Integration URL" ))
+    success_moji:  ":airplane_departure:"
+    fail_moji:     ":airplane_arriving:"
+    upset_moji:    ":sad_panda:"
+    channel:       (( param "Please specify the channel (#name) or user (@user) to send messages to" ))
+    username:      concourse
+    icon:          https://cl.ly/2F421Y300u07/concourse-logo-blue-transparent.png
+    fail_url: '(( concat "<" meta.url "/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME| Concourse Failure! " meta.slack.upset_moji ">" ))'
+
+groups:
+- name: (( grab meta.pipeline ))
+  jobs:
+    - freetds
+
+jobs:
+- name: freetds
+  plan:
+  - aggregate:
+    - get: git
+    - get: freetsd
+
+resource_types:
+  - name: ftp
+    type: docker-image
+    source:
+      repository: aequitas/ftp-resource
+
+resources:
+  - name: git
+    type: git
+    source:
+      uri:         (( grab meta.github.uri ))
+      branch:      (( grab meta.github.branch ))
+      private_key: (( grab meta.github.private_key ))
+
+  - name: freetsd
+    type: ftp
+    source:
+      uri: ftp://ftp.freetds.org/pub/freetds/stable/
+      regex: (?P<file>freetds-(?P<version>.*).tar.gz)
