@@ -12,6 +12,7 @@ type Stager interface {
 	DepDir() string
 	DepsIdx() string
 	DepsDir() string
+	WriteProfileD(string, string) error
 }
 
 type Manifest interface {
@@ -48,6 +49,19 @@ func (s *Supplier) Run() error {
 		return err
 	}
 	if err := s.Installer.InstallDependency(freetds, s.Stager.DepDir()); err != nil {
+		return err
+	}
+
+	if err := s.Stager.WriteProfileD("finalize_freetds.sh", `#!/bin/bash
+DEP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+
+# https://www.freetds.org/faq.html#SYBASE
+export SYBASE=$DEP_DIR
+
+# https://github.com/rails-sqlserver/tiny_tds/blob/master/ext/tiny_tds/extconf.rb#L38
+export FREETDS_DIR=$DEP_DIR
+`); err != nil {
+		s.Log.Error("Unable to write profile.d: %s", err.Error())
 		return err
 	}
 
