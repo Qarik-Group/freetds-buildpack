@@ -5,10 +5,10 @@ Our buildpack users will need to download a pre-compiled version of [FreeTDS](ht
 ```plain
 VERSION=1.1.6
 mkdir -p tmp/freetds-src
-rm -rf tmp/freetds-output
-mkdir -p tmp/freetds-output
 curl -L -o tmp/freetds-src/freetds-$VERSION.tar.gz ftp://ftp.freetds.org/pub/freetds/stable/freetds-$VERSION.tar.gz
 
+rm -rf tmp/freetds-output
+mkdir -p tmp/freetds-output
 docker run -ti \
   -e VERSION=${VERSION:?required} \
   -v $PWD:/buildpack \
@@ -16,8 +16,10 @@ docker run -ti \
   -v $PWD/tmp/freetds-output:/freetds-output \
   -e SRC_DIR=/freetds-src \
   -e OUTPUT_BLOBS_DIR=/freetds-output/blobs \
-  -e PUSHME=/freetds-output/pushme \
+  -e REPO_OUT=/freetds-output/pushme \
   -e LIBRARY=freetds \
+  -e "GIT_NAME=$(git config user.name)" \
+  -e "GIT_EMAIL=$(git config user.email)" \
   cloudfoundry/cflinuxfs3 \
   /buildpack/scripts/freetds/compile.sh
 ```

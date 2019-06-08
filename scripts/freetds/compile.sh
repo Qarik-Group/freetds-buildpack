@@ -18,26 +18,30 @@ S3_REGION=${S3_REGION:-us-east-2}
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 : ${SRC_DIR:?required}
 : ${OUTPUT_BLOBS_DIR:?required}
-: ${PUSHME:?required}
+: ${REPO_OUT:?required}
+: ${GIT_EMAIL:?required}
+: ${GIT_NAME:?required}
+REPO_BRANCH=${REPO_BRANCH:-master}
 
 TMP_SRC_DIR=${TMP_DIR:-tmp/src}
 TMP_BUILD_DIR=${TMP_DIR:-tmp/build}
 
-# SRC_DIR=$PWD/${SRC_DIR}
-# OUTPUT_DIR=$PWD/${OUTPUT_DIR}
+SRC_DIR=$PWD/${SRC_DIR}
 TMP_SRC_DIR=$PWD/${TMP_SRC_DIR}
 TMP_BUILD_DIR=$PWD/${TMP_BUILD_DIR}
 
 mkdir -p $TMP_SRC_DIR
-cd $TMP_SRC_DIR
+pushd $TMP_SRC_DIR
 rm -rf freetds-*/
 
 SRC_ARCHIVE=$(ls $SRC_DIR/$LIBRARY*)
 tar xfz $SRC_ARCHIVE
-cd *freetds*/
+pushd *freetds*/
 ./configure --prefix=${TMP_BUILD_DIR}
 make
 make install
+popd
+popd
 
 mkdir -p $OUTPUT_BLOBS_DIR
 
@@ -47,8 +51,8 @@ popd
 
 sha=$(sha256sum $OUTPUT_BLOBS_DIR/freetds-compiled-${VERSION}.tgz | awk '{print $1}')
 
-git clone $ROOT_DIR $PUSHME
-cat > $PUSHME/manifest.yml <<YAML
+git clone $ROOT_DIR $REPO_OUT
+cat > $REPO_OUT/manifest.yml <<YAML
 ---
 language: freetds
 default_versions:
@@ -71,3 +75,18 @@ dependencies:
   cf_stacks:
   - cflinuxfs3
 YAML
+
+# GIT!
+if [[ -z $(git config --global user.email) ]]; then
+  git config --global user.email "${GIT_EMAIL}"
+fi
+if [[ -z $(git config --global user.name) ]]; then
+  git config --global user.name "${GIT_NAME}"
+fi
+
+(cd ${REPO_OUT}
+ echo "${VERSION}" > VERSION
+ git merge --no-edit ${REPO_BRANCH}
+ git add -A
+ git status
+ git commit -m "bump ${LIBRARY} v${VERSION}")

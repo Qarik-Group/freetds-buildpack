@@ -94,9 +94,12 @@ jobs:
         VERSION_REGEX: freetds-(.*).tar.gz
         SRC_DIR: freetds
         OUTPUT_BLOBS_DIR: blobs
-        PUSHME: pushme
+        REPO_OUT: pushme
+        REPO_BRANCH: (( grab meta.github.branch ))
         S3_BUCKET: (( grab meta.aws.bucket ))
         S3_REGION: (( grab meta.aws.region_name ))
+        GIT_EMAIL: (( grab meta.git.email ))
+        GIT_NAME:  (( grab meta.git.name ))
 
 resource_types:
   - name: ftp
