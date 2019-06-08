@@ -1,8 +1,9 @@
 ---
 language: freetds
-default_versions: []
+default_versions:
+- name: freetds
+  version: 1.1.6
 dependency_deprecation_dates: []
-dependencies: []
 
 include_files:
   - README.md
@@ -10,3 +11,11 @@ include_files:
   - bin/supply
   - manifest.yml
 pre_package: scripts/build.sh
+
+dependencies:
+- name: freetds
+  version: 1.1.6
+  uri: https://freetds-buildpack.s3.us-east-2.amazonaws.com/blobs/freetds/freetds-compiled-1.1.6.tgz
+  sha256: 2f8db6ef07a8487b3e79e76b64dd18b794b371a2bef72c5f586c462697466fe6  ///freetds-output/blobs/freetds-compiled-1.1.6.tgz
+  cf_stacks:
+  - cflinuxfs3
