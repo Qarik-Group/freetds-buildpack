@@ -41,9 +41,15 @@ type Supplier struct {
 }
 
 func (s *Supplier) Run() error {
-	s.Log.BeginStep("Supplying freetds")
+	s.Log.BeginStep("Supplying FreeTDS")
 
-	// TODO: Install any dependencies here...
+	freetds, err := s.Manifest.DefaultVersion("freetds")
+	if err != nil {
+		return err
+	}
+	if err := s.Installer.InstallDependency(freetds, s.Stager.DepDir()); err != nil {
+		return err
+	}
 
 	return nil
 }
