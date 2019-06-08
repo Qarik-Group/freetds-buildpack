@@ -36,7 +36,7 @@ cd $TMP_BUILD_DIR
 tar cfz $OUTPUT_DIR/blobs/freetds-compiled-${VERSION}.tgz .
 cd -
 
-sha=$(sha256sum $OUTPUT_DIR/blobs/freetds-compiled-${VERSION}.tgz)
+sha=$(sha256sum $OUTPUT_DIR/blobs/freetds-compiled-${VERSION}.tgz | awk '{print $1}')
 
 cat > $OUTPUT_DIR/manifest/manifest.yml <<YAML
 ---
