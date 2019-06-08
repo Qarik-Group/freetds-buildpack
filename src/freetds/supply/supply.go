@@ -60,6 +60,11 @@ export SYBASE=$DEP_DIR
 
 # https://github.com/rails-sqlserver/tiny_tds/blob/master/ext/tiny_tds/extconf.rb#L38
 export FREETDS_DIR=$DEP_DIR
+
+# https://github.com/rails-sqlserver/heroku-buildpack-freetds/blob/master/bin/compile#L90
+export LD_LIBRARY_PATH="${DEP_DIR}/lib:${LD_LIBRARY_PATH:-/usr/local/lib}"
+export LD_RUN_PATH="${DEP_DIR}/lib:${LD_RUN_PATH:-/usr/local/lib}"
+export LIBRARY_PATH="${DEP_DIR}/lib:${LIBRARY_PATH:-/usr/local/lib}"
 `); err != nil {
 		s.Log.Error("Unable to write profile.d: %s", err.Error())
 		return err
