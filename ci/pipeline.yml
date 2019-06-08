@@ -84,7 +84,8 @@ jobs:
       - name: git
       - name: freetds
       outputs:
-      - name: output
+      - name: blobs
+      - name: pushme
       run:
         path: (( concat "./git/scripts/" meta.name "/compile.sh" ))
       params:
@@ -92,7 +93,8 @@ jobs:
         # VERSION_FROM: freetds/version
         VERSION_REGEX: freetds-(.*).tar.gz
         SRC_DIR: freetds
-        OUTPUT_DIR: output
+        OUTPUT_BLOBS_DIR: blobs
+        PUSHME: pushme
         S3_BUCKET: (( grab meta.aws.bucket ))
         S3_REGION: (( grab meta.aws.region_name ))
 

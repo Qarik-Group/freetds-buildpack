@@ -5,15 +5,19 @@ Our buildpack users will need to download a pre-compiled version of [FreeTDS](ht
 ```plain
 VERSION=1.1.6
 mkdir -p tmp/freetds-src
+rm -rf tmp/freetds-output
 mkdir -p tmp/freetds-output
 curl -L -o tmp/freetds-src/freetds-$VERSION.tar.gz ftp://ftp.freetds.org/pub/freetds/stable/freetds-$VERSION.tar.gz
+
 docker run -ti \
   -e VERSION=${VERSION:?required} \
   -v $PWD:/buildpack \
   -v $PWD/tmp/freetds-src:/freetds-src \
   -v $PWD/tmp/freetds-output:/freetds-output \
   -e SRC_DIR=/freetds-src \
-  -e OUTPUT_DIR=/freetds-output \
+  -e OUTPUT_BLOBS_DIR=/freetds-output/blobs \
+  -e PUSHME=/freetds-output/pushme \
+  -e LIBRARY=freetds \
   cloudfoundry/cflinuxfs3 \
   /buildpack/scripts/freetds/compile.sh
 ```
@@ -25,8 +29,9 @@ bucket=freetds-buildpack
 aws s3 cp --recursive tmp/freetds-output/blobs s3://$bucket/blobs/freetds
 ```
 
-Finally, copy the new `manifest.yml` into this project:
+Finally, commit the new `manifest.yml` into this project:
 
 ```plain
-cp tmp/freetds-output/manifest/manifest.yml manifest.yml
+git add manifest.yml
+git commit -m "update freetds v${VERSION}
 ```
