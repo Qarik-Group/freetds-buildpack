@@ -64,9 +64,11 @@ groups:
 - name: (( grab meta.pipeline ))
   jobs:
     - freetds
+    - shipit
 
 jobs:
 - name: freetds
+  public: true
   plan:
   - aggregate:
     - get: git
@@ -110,6 +112,40 @@ jobs:
       rebase: true
       repository: pushme
 
+- name: shipit
+  public: true
+  plan:
+  - do:
+    - get: git
+      passed: [freetds]
+    - task: release
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source:
+            repository: (( grab meta.images.go.name ))
+            tag:        (( grab meta.images.go.tag ))
+        inputs:
+        - name: git
+        outputs:
+        - name: gh
+        - name: notifications
+        run:
+          path: ./git/ci/scripts/shipit.sh
+          args: []
+        params:
+          RELEASE_NAME:   (( grab meta.pipeline ))
+          RELEASE_OUT:    gh
+          REPO_URL:       (( concat "https://github.com/" meta.github.owner "/" meta.github.repo ))
+          NOTIFICATION_OUT: notifications
+    - put: github
+      params:
+        name:   gh/name
+        tag:    gh/tag
+        body:   gh/notes.md
+        globs: [gh/artifacts/*]
+
 resource_types:
   - name: ftp
     type: docker-image
@@ -139,3 +175,10 @@ resources:
       access_key_id: (( grab meta.aws.access_key ))
       secret_access_key: (( grab meta.aws.secret_key ))
       regexp: blobs/freetds/freetds-compiled-(.*).tgz
+
+  - name: github
+    type: github-release
+    source:
+      user:         (( grab meta.github.owner ))
+      repository:   (( grab meta.github.repo ))
+      access_token: (( grab meta.github.access_token ))
