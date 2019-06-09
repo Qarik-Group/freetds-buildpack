@@ -16,6 +16,6 @@ dependencies:
 - name: freetds
   version: 1.1.6
   uri: https://freetds-buildpack.s3.us-east-2.amazonaws.com/blobs/freetds/freetds-compiled-1.1.6.tgz
-  sha256: 2f8db6ef07a8487b3e79e76b64dd18b794b371a2bef72c5f586c462697466fe6
+  sha256: f574356c49912c96e783d475c938258ae8d8e992340f1a7540ffc62376cb9065
   cf_stacks:
   - cflinuxfs3
