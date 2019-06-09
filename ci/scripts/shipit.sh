@@ -3,21 +3,20 @@
 set -eu
 
 : ${LIBRARY:?required}
-: ${VERSION_FROM:?required}
 : ${RELEASE_OUT:?required}
 : ${NOTIFICATION_OUT:?required}
 : ${REPO_URL:?required}
 
+REPO_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
+
 VERSION_FROM=${VERSION_FROM:-$REPO_ROOT/VERSION}
 VERSION=$(cat ${VERSION_FROM})
-
-REPO_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." && pwd )"
 
 ###############################################################
 
 go get github.com/cloudfoundry/libbuildpack/packager/buildpack-packager
 
-push $REPO_ROOT
+pushd $REPO_ROOT
 source .envrc
 
 rm -f *.zip

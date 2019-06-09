@@ -91,10 +91,10 @@ jobs:
       run:
         path: (( concat "./git/scripts/" meta.name "/compile.sh" ))
       params:
-        LIBRARY: freetds
+        LIBRARY: (( grab meta.name ))
         # VERSION_FROM: freetds/version
         VERSION_REGEX: freetds-(.*).tar.gz
-        SRC_DIR: freetds
+        SRC_DIR: (( grab meta.name ))
         OUTPUT_BLOBS_DIR: blobs
         REPO_OUT: pushme
         REPO_BRANCH: (( grab meta.github.branch ))
@@ -135,9 +135,9 @@ jobs:
           path: ./git/ci/scripts/shipit.sh
           args: []
         params:
-          RELEASE_NAME:   (( grab meta.pipeline ))
-          RELEASE_OUT:    gh
-          REPO_URL:       (( concat "https://github.com/" meta.github.owner "/" meta.github.repo ))
+          LIBRARY:     (( grab meta.name ))
+          RELEASE_OUT: gh
+          REPO_URL:    (( concat "https://github.com/" meta.github.owner "/" meta.github.repo ))
           NOTIFICATION_OUT: notifications
     - put: github
       params:
