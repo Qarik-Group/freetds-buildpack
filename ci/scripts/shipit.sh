@@ -21,7 +21,7 @@ source .envrc
 
 rm -f *.zip
 buildpack-packager summary
-buildpack-packager -cached -stack cflinuxfs3
+buildpack-packager build -cached -stack cflinuxfs3
 popd
 
 mkdir -p ${RELEASE_OUT}/artifacts
