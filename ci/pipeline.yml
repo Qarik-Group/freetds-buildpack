@@ -118,6 +118,7 @@ jobs:
   - do:
     - get: git
       passed: [freetds]
+      trigger: true
     - task: release
       config:
         platform: linux
