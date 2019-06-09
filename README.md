@@ -19,6 +19,8 @@ Failed! Do you have FreeTDS 0.95.80 or higher installed?
   **ERROR** Unable to install gems: exit status 5
 ```
 
+This buildpack's [CI pipeline](https://ci2.starkandwayne.com/teams/cfcommunity/pipelines/freetds-buildpack) automatically watches for [new releases](https://github.com/starkandwayne/freetds-buildpack/releases) of FreeTDS and self-publishes new releases of the buildpack. Watch this repo for new releases.
+
 ## Usage
 
 Simple add `freetds_buildpack` or `https://github.com/starkandwayne/freetds-buildpack` to the start of your `manifest.yml` buildpacks list.
