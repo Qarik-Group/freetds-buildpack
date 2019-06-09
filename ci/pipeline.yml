@@ -100,15 +100,15 @@ jobs:
         S3_REGION: (( grab meta.aws.region_name ))
         GIT_EMAIL: (( grab meta.git.email ))
         GIT_NAME:  (( grab meta.git.name ))
+  - name: blob-upload
+    put: compiled-blob
+    params:
+      file: blobs/freetds-compiled-*.tgz
   - name: git-push
     put: git
     params:
       rebase: true
       repository: pushme
-  - name: blob-upload
-    put: compiled-blob
-    params:
-      file: blobs/freetds-compiled-*.tgz
 
 resource_types:
   - name: ftp
