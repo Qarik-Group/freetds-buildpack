@@ -7,7 +7,7 @@ Bundler.require :default, ENV['RACK_ENV'].to_sym
 
 class AppServer < Sinatra::Base
   get '/' do
-    "Hi, I'm an app tiny_tds gem!"
+    "Hi, I'm an app with tiny_tds gem!"
   end
 
   run! if app_file == $0
