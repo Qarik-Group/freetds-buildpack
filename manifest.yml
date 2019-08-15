@@ -10,6 +10,7 @@ include_files:
   - VERSION
   - bin/supply
   - manifest.yml
+  - freetds/freetds-compiled-1.1.12.tgz
 pre_package: scripts/build.sh
 
 dependencies:
