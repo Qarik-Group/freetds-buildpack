@@ -1,8 +1,8 @@
 package main
 
 import (
-	_ "freetds/hooks"
-	"freetds/supply"
+	_ "github.com/starkandwayne/freetds-buildpack/src/freetds/hooks"
+	"github.com/starkandwayne/freetds-buildpack/src/freetds/supply"
 	"os"
 	"path/filepath"
 	"time"

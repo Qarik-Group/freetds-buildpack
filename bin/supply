@@ -1,7 +1,4 @@
 #!/bin/bash
-# This script provides dependencies for an app
-
-
 set -euo pipefail
 
 BUILD_DIR=$1
@@ -9,9 +6,15 @@ CACHE_DIR=$2
 DEPS_DIR=$3
 DEPS_IDX=$4
 
+START_DIR=$PWD
+
 export BUILDPACK_DIR=`dirname $(readlink -f ${BASH_SOURCE%/*})`
 source "$BUILDPACK_DIR/scripts/install_go.sh"
 output_dir=$(mktemp -d -t supplyXXX)
+
+cd $BUILDPACK_DIR
 echo "-----> Running go build supply"
-GOROOT=$GoInstallDir/go GOPATH=$BUILDPACK_DIR $GoInstallDir/go/bin/go build -o $output_dir/supply freetds/supply/cli
+GOROOT=$GoInstallDir/go $GoInstallDir/go/bin/go build -mod=vendor -o $output_dir/supply ./src/freetds/supply/cli
+
+cd $START_DIR
 $output_dir/supply "$BUILD_DIR" "$CACHE_DIR" "$DEPS_DIR" "$DEPS_IDX"

@@ -1,4 +1,15 @@
-pkg
-.bin
 *.zip
 tmp
+*.log
+.DS_Store
+.anvil/
+.env
+.idea
+log
+repos/*
+tmp/
+/.bin/
+/pkg/
+!vendor/**
+
+

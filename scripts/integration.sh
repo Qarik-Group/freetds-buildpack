@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# Runs the integration tests
 set -euo pipefail
 
 cd "$( dirname "${BASH_SOURCE[0]}" )/.."
@@ -8,11 +7,17 @@ source .envrc
 
 GINKGO_NODES=${GINKGO_NODES:-3}
 GINKGO_ATTEMPTS=${GINKGO_ATTEMPTS:-2}
+export CF_STACK=${CF_STACK:-cflinuxfs3}
+
+UNCACHED_BUILDPACK_FILE=${UNCACHED_BUILDPACK_FILE:-""}
+CACHED_BUILDPACK_FILE=${CACHED_BUILDPACK_FILE:-""}
 
 cd src/*/integration
 
 # echo "Run Uncached Buildpack"
-# ginkgo -r --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached=false
+# BUILDPACK_FILE="$UNCACHED_BUILDPACK_FILE" \
+#   ginkgo -r -mod=vendor --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached=false
 
 echo "Run Cached Buildpack"
-ginkgo -r --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached
+BUILDPACK_FILE="$CACHED_BUILDPACK_FILE" \
+  ginkgo -r -mod=vendor --flakeAttempts=$GINKGO_ATTEMPTS -nodes $GINKGO_NODES --slowSpecThreshold=60 -- --cached
