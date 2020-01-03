@@ -29,13 +29,6 @@ meta:
       name: cloudfoundry/cflinuxfs3
       tag: latest
 
-  cf:
-    api_url:         (( param "Please provide api_url" ))
-    admin_username:  (( param "Please provide admin_username" ))
-    admin_password:  (( param "Please provide admin_password" ))
-    organization:    (( param "Please provide organization" ))
-    space:           (( param "Please provide space" ))
-
   aws:
     bucket:     (( grab meta.pipeline ))
     region_name: us-east-1
