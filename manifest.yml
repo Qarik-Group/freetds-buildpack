@@ -2,7 +2,7 @@
 language: freetds
 default_versions:
 - name: freetds
-  version: 1.2.2
+  version: 1.2.3
 dependency_deprecation_dates: []
 
 include_files:
@@ -14,8 +14,8 @@ pre_package: scripts/build.sh
 
 dependencies:
 - name: freetds
-  version: 1.2.2
-  uri: https://freetds-buildpack.s3.us-east-2.amazonaws.com/blobs/freetds/freetds-compiled-1.2.2.tgz
-  sha256: d4aca49cd0a90ca851ae82f74ff26fc9e3a5bed461d46f3606bafc88737d992a
+  version: 1.2.3
+  uri: https://freetds-buildpack.s3.us-east-2.amazonaws.com/blobs/freetds/freetds-compiled-1.2.3.tgz
+  sha256: 585c9557c2fe3d1186d7282a2465f08f9a5e7d5e805142110067177cb1c1e99c
   cf_stacks:
   - cflinuxfs3
